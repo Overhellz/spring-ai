@@ -17,6 +17,11 @@ public class DemoWebinar1NoReactApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(DemoWebinar1NoReactApplication.class, args);
         ChatClient chatClient = context.getBean(ChatClient.class);
-        System.out.println(chatClient.prompt().user("Дай первую строчку Bohemian Rhapsody").call().content());
+        System.out.println(
+                chatClient.prompt()
+                        .user("Дай первую строчку Bohemian Rhapsody")
+                        .call()
+                        .content()
+        );
     }
 }
