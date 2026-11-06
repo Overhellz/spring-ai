@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240.1 240.1">
+    <linearGradient id="Oval_1_" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="240.1">
+        <stop offset="0" style="stop-color:#2AABAA"/>
+        <stop offset="1" style="stop-color:#229EAA"/>
+    </linearGradient>
+    <circle fill-rule="evenodd" clip-rule="evenodd" fill="url(#Oval_1_)" cx="120.1" cy="120.1" r="120.1"/>
+    <g fill="#FFFFFF">
+        <!-- голова -->
+        <circle cx="120.1" cy="88" r="24"/>
+        <!-- плечи/торс -->
+        <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M120.1,124c-27.6,0-50,16.4-50,36.6c0,3.4,2.8,6.2,6.2,6.2h87.6c3.4,0,6.2-2.8,6.2-6.2 C170.1,140.4,147.7,124,120.1,124z"/>
+        <!-- раскрытая книга/доска -->
+        <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M120.1,150.5l-22-7.4v18.3l22,7.4l22-7.4v-18.3L120.1,150.5z M120.1,155.2l-16.6-5.6l16.6-5.6 l16.6,5.6L120.1,155.2z"/>
+    </g>
+    <!-- звезда-акцент (ментор/наставник) -->
+    <path fill="#FFFFFF"
+          d="M120.1,36l4.6,9.4l10.4,1.5l-7.5,7.3l1.8,10.3l-9.3-4.9l-9.3,4.9l1.8-10.3l-7.5-7.3l10.4-1.5L120.1,36z"/>
+</svg>
