@@ -4,6 +4,13 @@
 
 http://localhost:8080
 
+## pgadmin
+
+http://localhost:5050
+
+pgadmin4@pgadmin.org
+admin
+
 ## docker
 
 ```commandline

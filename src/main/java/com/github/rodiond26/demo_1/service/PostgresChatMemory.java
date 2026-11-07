@@ -2,36 +2,36 @@ package com.github.rodiond26.demo_1.service;
 
 import com.github.rodiond26.demo_1.model.Chat;
 import com.github.rodiond26.demo_1.model.ChatEntry;
-import com.github.rodiond26.demo_1.repository.ChatRepo;
+import com.github.rodiond26.demo_1.repository.ChatRepository;
+import lombok.Builder;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
-@Component
+@Builder
 public class PostgresChatMemory implements ChatMemory {
 
-    @Autowired
-    private ChatRepo chatRepo;
+    private ChatRepository chatMemoryRepository;
+    private int maxMessages;
 
     @Override
-    @Transactional
     public void add(String conversationId, List<Message> messages) {
+        Chat chat = chatMemoryRepository.findById(Long.valueOf(conversationId)).orElseThrow();
         for (Message message : messages) {
-            Chat chat = chatRepo.findById(Long.valueOf(conversationId)).orElseThrow();
             chat.addEntry(ChatEntry.toChatEntry(message));
         }
+        chatMemoryRepository.save(chat);
     }
 
     @Override
-    public List<Message> get(String conversationId, int lastN) {
-        Chat chat = chatRepo.findById(Long.valueOf(conversationId)).orElseThrow();
+    public List<Message> get(String conversationId) {
+         Chat chat = chatMemoryRepository.findById(Long.valueOf(conversationId)).orElseThrow();
         return chat.getHistory().stream()
+                .sorted(Comparator.comparing(ChatEntry::getCreatedAt).reversed())
                 .map(ChatEntry::toMessage)
-                .limit(lastN)
+                .limit(maxMessages)
                 .toList();
     }
 
