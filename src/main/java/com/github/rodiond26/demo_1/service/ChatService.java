@@ -3,9 +3,10 @@ package com.github.rodiond26.demo_1.service;
 import com.github.rodiond26.demo_1.model.Chat;
 import com.github.rodiond26.demo_1.model.ChatEntry;
 import com.github.rodiond26.demo_1.model.Role;
-import com.github.rodiond26.demo_1.repository.ChatRepository;
+import com.github.rodiond26.demo_1.repository.ChatRepo;
 import lombok.SneakyThrows;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import static com.github.rodiond26.demo_1.model.Role.USER;
 public class ChatService {
 
     @Autowired
-    private ChatRepository chatRepository;
+    private ChatRepo chatRepo;
 
     @Autowired
     private ChatClient chatClient;
@@ -31,21 +32,24 @@ public class ChatService {
     @Autowired
     private ChatService selfProxy;
 
+    @Autowired
+    private PostgresChatMemory postgresChatMemory;
+
     public List<Chat> getAllChats() {
-        return chatRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        return chatRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     public Chat getChat(Long chatId) {
-        return chatRepository.findById(chatId).orElseThrow();
+        return chatRepo.findById(chatId).orElseThrow();
     }
 
     public Chat createNewChat(String title) {
         Chat chat = Chat.builder().title(title).build();
-        return chatRepository.save(chat);
+        return chatRepo.save(chat);
     }
 
     public void deleteChat(Long chatId) {
-        chatRepository.deleteById(chatId);
+        chatRepo.deleteById(chatId);
     }
 
     public void proceedInteraction(Long chatId, String prompt) {
@@ -56,21 +60,21 @@ public class ChatService {
 
     @Transactional
     public void addChatEntry(Long chatId, String prompt, Role role) {
-        Chat chat = chatRepository.findById(chatId).orElseThrow();
+        Chat chat = chatRepo.findById(chatId).orElseThrow();
         chat.addEntry(ChatEntry.builder().content(prompt).role(role).build());
     }
 
     public SseEmitter proceedInteractionWithStreaming(Long chatId, String prompt) {
-        selfProxy.addChatEntry(chatId, prompt, USER);
-
-        StringBuilder answer = new StringBuilder();
         SseEmitter sseEmitter = new SseEmitter(0L);
-        chatClient.prompt().user(prompt).stream()
+        StringBuilder answer = new StringBuilder();
+
+        chatClient.prompt()
+                .user(prompt)
+                .advisors(MessageChatMemoryAdvisor.builder(postgresChatMemory).conversationId(String.valueOf(chatId)).build())
+                .stream()
                 .chatResponse().subscribe(
                         response -> processToken(response, sseEmitter, answer),
-                        sseEmitter::completeWithError,
-                        () -> selfProxy.addChatEntry(chatId, answer.toString(), ASSISTANT)
-                );
+                        sseEmitter::completeWithError);
 
         return sseEmitter;
     }
