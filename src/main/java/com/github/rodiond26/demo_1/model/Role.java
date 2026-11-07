@@ -1,4 +1,4 @@
-package com.github.rodiond26.demo_1;
+package com.github.rodiond26.demo_1.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
