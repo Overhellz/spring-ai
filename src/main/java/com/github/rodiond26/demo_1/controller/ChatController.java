@@ -25,7 +25,7 @@ public class ChatController {
     @GetMapping("/chat/{chatId}")
     public String showChat(@PathVariable Long chatId, ModelMap model) {
         model.addAttribute("chats", chatService.getAllChats());
-        model.addAttribute("chatId", chatService.getChat(chatId));
+        model.addAttribute("chat", chatService.getChat(chatId));
         return "chat";
     }
 
@@ -39,5 +39,11 @@ public class ChatController {
     public String deleteChat(@PathVariable Long chatId) {
         chatService.deleteChat(chatId);
         return "redirect:/";
+    }
+
+    @PostMapping("/chat/{chatId}/entry")
+    public String talkToModel(@PathVariable Long chatId, @RequestParam String prompt) {
+        chatService.proceedInteraction(chatId, prompt);
+        return "redirect:/chat/" + chatId;
     }
 }
