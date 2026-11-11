@@ -2,7 +2,7 @@ package com.github.rodiond26.demo_1.service;
 
 import com.github.rodiond26.demo_1.model.Chat;
 import com.github.rodiond26.demo_1.model.ChatEntry;
-import com.github.rodiond26.demo_1.repository.ChatRepository;
+import com.github.rodiond26.demo_1.repo.ChatRepository;
 import lombok.Builder;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;

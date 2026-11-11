@@ -1,12 +1,7 @@
-package com.github.rodiond26.demo_1.repository;
+package com.github.rodiond26.demo_1.repo;
 
 import com.github.rodiond26.demo_1.model.Chat;
-import com.github.rodiond26.demo_1.model.ChatEntry;
-import org.springframework.ai.chat.memory.ChatMemoryRepository;
-import org.springframework.ai.chat.messages.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> /*, ChatMemoryRepository */ {
 //
